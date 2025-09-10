@@ -1,6 +1,17 @@
-﻿namespace Worklyn_backend.Domain.Entities
+﻿using Worklyn_backend.Domain.Enum;
+
+namespace Worklyn_backend.Domain.Entities
 {
-    public class Department
+    public class Department : BaseEntity
     {
+        public int DepartmentID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int? ManagerID { get; set; }
+        public Employee Manager { get; set; }
+
+
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+        public DepartmentStatus Status { get; set; } = DepartmentStatus.Active;
     }
 }
