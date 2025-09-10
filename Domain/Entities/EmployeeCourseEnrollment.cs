@@ -1,6 +1,6 @@
 ﻿namespace Worklyn_backend.Domain.Entities
 {
-    public class EmployeeCourseEnrollment
+    public class EmployeeCourseEnrollment : BaseEntity
     {
     }
 }

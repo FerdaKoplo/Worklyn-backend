@@ -1,4 +1,4 @@
-﻿namespace Worklyn_backend.Domain.Enum
+﻿namespace Worklyn_backend.Domain.Enum.Department
 {
     public enum DepartmentStatus
     {

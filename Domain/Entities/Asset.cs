@@ -1,6 +1,6 @@
 ﻿namespace Worklyn_backend.Domain.Entities
 {
-    public class Asset
+    public class Asset : BaseEntity
     {
     }
 }

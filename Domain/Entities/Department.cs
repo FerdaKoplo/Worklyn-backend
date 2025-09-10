@@ -1,4 +1,4 @@
-﻿using Worklyn_backend.Domain.Enum;
+﻿using Worklyn_backend.Domain.Enum.Department;
 
 namespace Worklyn_backend.Domain.Entities
 {

@@ -1,16 +1,16 @@
-﻿using Worklyn_backend.Domain.Enum;
+﻿using Worklyn_backend.Domain.Enum.Employee;
 
 namespace Worklyn_backend.Domain.Entities
 {
     public class Employee : BaseEntity
     {
-        public int EmployeeID { get; set; }
+        public Guid EmployeeID { get; set; }
         public string EmployeeNumber { get; set; }
 
         // Job Info
         public int PositionID { get; set; }
         public int DepartmentID { get; set; }
-        public int? ManagerID { get; set; }
+        public Guid? ManagerID { get; set; }
         public DateTime HireDate { get; set; }
 
         // Employement Status
