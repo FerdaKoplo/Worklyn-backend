@@ -1,4 +1,5 @@
 ﻿using Worklyn_backend.Domain.Enum.Employee;
+using Worklyn_backend.Domain.ValueObjects.Date;
 
 namespace Worklyn_backend.Domain.Entities
 {
@@ -15,9 +16,7 @@ namespace Worklyn_backend.Domain.Entities
         public int LeaveTypeId { get; set; }
         public LeaveType LeaveType { get; set; }
 
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int TotalDays { get; set; }
+        public DateRangeVO LeavePeriod { get; set; }
 
         public string Reason { get; set; }
         public string AttachmentUrl { get; set; }

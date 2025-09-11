@@ -1,4 +1,5 @@
 ﻿using Worklyn_backend.Domain.Enum.Asset;
+using Worklyn_backend.Domain.ValueObjects.Finance;
 
 namespace Worklyn_backend.Domain.Entities
 {
@@ -13,7 +14,7 @@ namespace Worklyn_backend.Domain.Entities
         public string AssetTag { get; set; }
         public string Description { get; set; }
         public DateTime PurchaseDate { get; set; }
-        public decimal Value { get; set; }
+        public MoneyVO Value { get; set; }
         public AssetStatus Status { get; set; } = AssetStatus.Available;
     }
 }

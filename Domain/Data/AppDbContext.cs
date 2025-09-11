@@ -94,6 +94,22 @@ namespace Worklyn_backend.Domain.Data
                 .HasForeignKey(lr => lr.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Company>()
+                 .OwnsOne(c => c.Email, vo => vo.Property(e => e.Value).HasColumnName("Email"));
+
+            modelBuilder.Entity<Company>()
+                .OwnsOne(c => c.PhoneNumber, vo => vo.Property(p => p.Value).HasColumnName("PhoneNumber"));
+
+            modelBuilder.Entity<Company>()
+                .OwnsOne(c => c.Address, vo =>
+                {
+                    vo.Property(a => a.Street).HasColumnName("Street");
+                    vo.Property(a => a.City).HasColumnName("City");
+                    vo.Property(a => a.Province).HasColumnName("Province");
+                    vo.Property(a => a.Country).HasColumnName("Country");
+                    vo.Property(a => a.PostalCode).HasColumnName("PostalCode");
+                });
+
             // ---------- Department ----------
             modelBuilder.Entity<Department>()
                 .HasKey(d => d.DepartmentID);
@@ -165,6 +181,43 @@ namespace Worklyn_backend.Domain.Data
                 .HasForeignKey<EmployeeProfile>(ep => ep.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<EmployeeProfile>()
+            .OwnsOne(ep => ep.Name, vo =>
+             {
+                vo.Property(n => n.FirstName).HasColumnName("FirstName");
+                vo.Property(n => n.LastName).HasColumnName("LastName");
+             });
+
+            modelBuilder.Entity<EmployeeProfile>()
+                .OwnsOne(ep => ep.Email, vo => vo.Property(e => e.Value).HasColumnName("Email"));
+
+            modelBuilder.Entity<EmployeeProfile>()
+                .OwnsOne(ep => ep.PhoneNumber, vo => vo.Property(p => p.Value).HasColumnName("PhoneNumber"));
+
+            modelBuilder.Entity<EmployeeProfile>()
+                .OwnsOne(ep => ep.SecondaryPhoneNumber, vo => vo.Property(p => p.Value).HasColumnName("SecondaryPhoneNumber"));
+
+            modelBuilder.Entity<EmployeeProfile>()
+                .OwnsOne(ep => ep.Address, vo =>
+                {
+                    vo.Property(a => a.Street).HasColumnName("Street");
+                    vo.Property(a => a.City).HasColumnName("City");
+                    vo.Property(a => a.Province).HasColumnName("Province");
+                    vo.Property(a => a.Country).HasColumnName("Country");
+                    vo.Property(a => a.PostalCode).HasColumnName("PostalCode");
+                });
+
+            modelBuilder.Entity<EmployeeProfile>()
+                 .OwnsOne(ep => ep.EmergencyContact, ec =>
+                  {
+                   ec.Property(e => e.Name).HasColumnName("EmergencyContactName");
+                   ec.OwnsOne(e => e.Phone, ph =>
+                  {
+                     ph.Property(p => p.Value).HasColumnName("EmergencyContactPhone");
+                   });
+                   ec.Property(e => e.Relation).HasColumnName("EmergencyContactRelation");
+                   });
+
             // ---------- LeaveType ----------
             modelBuilder.Entity<LeaveType>()
                 .HasKey(lt => lt.LeaveTypeId);
@@ -185,6 +238,13 @@ namespace Worklyn_backend.Domain.Data
                 .HasForeignKey(lr => lr.ApproverId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<LeaveRequest>()
+                .OwnsOne(lr => lr.LeavePeriod, vo =>
+                 {
+                     vo.Property(v => v.Start).HasColumnName("StartDate");
+                     vo.Property(v => v.End).HasColumnName("EndDate");
+                 });
+
             // ---------- Subscription ----------
             modelBuilder.Entity<Subscription>()
                 .HasKey(s => s.SubscriptionId);
@@ -195,6 +255,16 @@ namespace Worklyn_backend.Domain.Data
                 .HasForeignKey(s => s.PaymentMethodID)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Subscription>()
+                .OwnsOne(s => s.Period, vo =>
+                 {
+                    vo.Property(d => d.Start).HasColumnName("StartDate");
+                    vo.Property(d => d.End).HasColumnName("EndDate");
+                 });
+
+            modelBuilder.Entity<Subscription>()
+                .OwnsOne(s => s.Price, vo => vo.Property(v => v.Amount).HasColumnName("Price"));
+
             // ---------- Asset ----------
             modelBuilder.Entity<Asset>()
                 .HasKey(a => a.AssetId);
@@ -204,6 +274,9 @@ namespace Worklyn_backend.Domain.Data
                 .WithMany()
                 .HasForeignKey(a => a.AssetCategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Asset>()
+                .OwnsOne(a => a.Value, vo => vo.Property(v => v.Amount).HasColumnName("Value"));
 
             // ---------- AssetCategory ----------
             modelBuilder.Entity<AssetCategory>()
@@ -227,6 +300,9 @@ namespace Worklyn_backend.Domain.Data
             modelBuilder.Entity<Position>()
                 .HasKey(p => p.PositionId);
 
+            modelBuilder.Entity<Position>()
+                .OwnsOne(p => p.BaseSalary, vo => vo.Property(v => v.Amount).HasColumnName("BaseSalary"));
+
             // ---------- RecruitmentCandidate ----------
             modelBuilder.Entity<RecruitmentCandidate>()
                 .HasKey(rc => rc.CandidateId);
@@ -234,6 +310,13 @@ namespace Worklyn_backend.Domain.Data
             // ---------- Shift ----------
             modelBuilder.Entity<Shift>()
                 .HasKey(s => s.ShiftId);
+
+            modelBuilder.Entity<Shift>()
+                .OwnsOne(s => s.ShiftPeriod, vo =>
+              {
+                vo.Property(d => d.Start).HasColumnName("StartTime");
+                vo.Property(d => d.End).HasColumnName("EndTime");
+             });
 
             // ---------- Attendance ----------
             modelBuilder.Entity<Attendance>()
@@ -260,6 +343,31 @@ namespace Worklyn_backend.Domain.Data
                 .WithMany(u => u.RefreshTokens)
                 .HasForeignKey(rt => rt.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RefreshToken>(rt =>
+            {
+                rt.HasKey(r => r.Id);
+
+                rt.HasOne(r => r.User)
+                  .WithMany(u => u.RefreshTokens)
+                  .HasForeignKey(r => r.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+                rt.OwnsOne(r => r.Token, vo =>
+                {
+                    vo.Property(t => t.Token)  
+                      .HasColumnName("Token")
+                      .IsRequired();
+
+                    vo.Property(t => t.ExpiresAt)
+                      .HasColumnName("ExpiresAt")
+                      .IsRequired();
+
+                    vo.Property(t => t.Status)
+                      .HasColumnName("Status")
+                      .IsRequired();
+                });
+            });
         }
     }
 }

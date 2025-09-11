@@ -1,4 +1,6 @@
-﻿using Worklyn_backend.Domain.Enum.EmployeeProfile;
+﻿using System.Net;
+using Worklyn_backend.Domain.Enum.EmployeeProfile;
+using Worklyn_backend.Domain.ValueObjects.Profile;
 
 namespace Worklyn_backend.Domain.Entities
 {
@@ -9,8 +11,7 @@ namespace Worklyn_backend.Domain.Entities
         public Employee Employee { get; set; }
 
         // Personal info
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public FullNameVO Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
         public MaritalStatus MaritalStatus { get; set; }
@@ -20,20 +21,14 @@ namespace Worklyn_backend.Domain.Entities
 
 
         // contact
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string? SecondaryPhoneNumber { get; set; }
-        public string City { get; set; }
-        public string Province { get; set; }
-        public string PostalCode { get; set; }
-        public string Country { get; set; }
-        public string Address { get; set; }
+        public EmailVO Email { get; set; }
+        public PhoneNumberVO PhoneNumber { get; set; }
+        public PhoneNumberVO? SecondaryPhoneNumber { get; set; }
+        public AddressVO Address { get; set; }
 
 
         // Emergency
-        public string EmergencyContactName { get; set; }
-        public string EmergencyContactPhone { get; set; }
-        public string EmergencyContactRelation { get; set; }
+        public EmergencyContactVO EmergencyContact { get; set; }
 
         // other necessary things
         public BloodType BloodType { get; set; }

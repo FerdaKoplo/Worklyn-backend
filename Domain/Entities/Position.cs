@@ -1,4 +1,6 @@
-﻿namespace Worklyn_backend.Domain.Entities
+﻿using Worklyn_backend.Domain.ValueObjects.Finance;
+
+namespace Worklyn_backend.Domain.Entities
 {
     public class Position : BaseEntity
     {
@@ -8,6 +10,6 @@
 
         public string Title { get; set; }
         public string Description { get; set; }
-        public decimal BaseSalary { get; set; }
+        public MoneyVO BaseSalary { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Worklyn_backend.Domain.Enum.Shift;
+using Worklyn_backend.Domain.ValueObjects.Date;
 
 namespace Worklyn_backend.Domain.Entities
 {
@@ -11,8 +12,7 @@ namespace Worklyn_backend.Domain.Entities
         public Guid EmployeeId { get; set; }  
         public Employee Employee { get; set; }
 
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateRangeVO ShiftPeriod { get; set; }
 
         public bool IsOvernight { get; set; } 
 

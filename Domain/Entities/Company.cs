@@ -1,4 +1,5 @@
 ﻿using Worklyn_backend.Domain.Enum.SubscriptionStatus;
+using Worklyn_backend.Domain.ValueObjects.Profile;
 
 namespace Worklyn_backend.Domain.Entities
 {
@@ -11,16 +12,10 @@ namespace Worklyn_backend.Domain.Entities
         public string RegistrationNumber { get; set; } //  NPWP or business license number
 
         // Contact info
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-
-       
-        // Address
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string Province { get; set; }
-        public string Country { get; set; }
-        public string PostalCode { get; set; }
+   
+        public EmailVO Email { get; set; }
+        public PhoneNumberVO PhoneNumber { get; set; }
+        public AddressVO Address { get; set; }
 
         // SaaS specifics
         public SubscriptionPlan CurrentPlan { get; set; } = SubscriptionPlan.Free;
