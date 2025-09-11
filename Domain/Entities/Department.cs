@@ -7,7 +7,7 @@ namespace Worklyn_backend.Domain.Entities
         public int DepartmentID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int? ManagerID { get; set; }
+        public Guid? ManagerId { get; set; }
         public Employee Manager { get; set; }
 
         public Guid CompanyId { get; set; } 

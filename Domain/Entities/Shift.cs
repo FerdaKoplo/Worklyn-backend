@@ -4,6 +4,7 @@ namespace Worklyn_backend.Domain.Entities
 {
     public class Shift : BaseEntity
     {
+        public Guid ShiftId { get; set; }
         public Guid CompanyId { get; set; }  
         public Company Company { get; set; }  
 

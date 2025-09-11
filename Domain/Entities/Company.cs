@@ -4,7 +4,7 @@ namespace Worklyn_backend.Domain.Entities
 {
     public class Company : BaseEntity
     {
-        public int CompanyID { get; set; }
+        public Guid CompanyId { get; set; }
         // Identity
         public string Name { get; set; }
         public string LegalName { get; set; }   // full registered name
@@ -15,7 +15,6 @@ namespace Worklyn_backend.Domain.Entities
         public string PhoneNumber { get; set; }
 
        
-
         // Address
         public string Address { get; set; }
         public string City { get; set; }
@@ -38,5 +37,6 @@ namespace Worklyn_backend.Domain.Entities
         public ICollection<Asset> Assets { get; set; } = new List<Asset>();
         public ICollection<LeaveType> LeaveTypes { get; set; } = new List<LeaveType>();
         public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
     }
 }

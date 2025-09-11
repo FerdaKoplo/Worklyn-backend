@@ -5,7 +5,7 @@ namespace Worklyn_backend.Domain.Entities
     public class EmployeeProfile : BaseEntity
     {
         public int EmployeeProfileId { get; set; }
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
         // Personal info

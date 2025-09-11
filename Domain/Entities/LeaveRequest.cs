@@ -25,5 +25,7 @@ namespace Worklyn_backend.Domain.Entities
         public Guid? ApproverId { get; set; }   
         public Employee Approver { get; set; }
         public LeaveRequestStatus Status { get; set; }
+
+
     }
 }

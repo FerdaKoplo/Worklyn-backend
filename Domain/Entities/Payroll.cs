@@ -5,14 +5,14 @@ namespace Worklyn_backend.Domain.Entities
 {
     public class Payroll : BaseEntity
     {
-        public int PayrollID { get; set; }
+        public int PayrollId { get; set; }
 
         // Tenant awareness
-        public int CompanyID { get; set; }
+        public Guid CompanyId { get; set; }
         public Company Company { get; set; }
 
         // Employee link
-        public int EmployeeID { get; set; }
+        public Guid EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
         // Pay period

@@ -1,4 +1,6 @@
-﻿namespace Worklyn_backend.Domain.Entities
+﻿using Worklyn_backend.Domain.Enum.Enrollment;
+
+namespace Worklyn_backend.Domain.Entities
 {
     public class EmployeeCourseEnrollment : BaseEntity
     {

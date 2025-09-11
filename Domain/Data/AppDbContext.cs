@@ -5,7 +5,9 @@ namespace Worklyn_backend.Domain.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        // ---------- DbSets ----------
         public DbSet<User> Users { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Company> Companies { get; set; }
@@ -13,10 +15,25 @@ namespace Worklyn_backend.Domain.Data
         public DbSet<Payroll> Payrolls { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<Shift> Shifts { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<PerformanceReview> PerformanceReviews { get; set; }
+        public DbSet<Position> Positions { get; set; }
+        public DbSet<RecruitmentCandidate> RecruitmentCandidates { get; set; }
+        public DbSet<LeaveType> LeaveTypes { get; set; }
+        public DbSet<LeaveRequest> LeaveRequests { get; set; }
+        public DbSet<Asset> Assets { get; set; }
+        public DbSet<AssetCategory> AssetCategories { get; set; }
+        public DbSet<EmployeeCourseEnrollment> EmployeeCourseEnrollments { get; set; }
+        public DbSet<EmployeeProfile> EmployeeProfiles { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // ---------- Company Relationships ----------
+            // ---------- Company ----------
+            modelBuilder.Entity<Company>()
+                .HasKey(c => c.CompanyId);
+
             modelBuilder.Entity<Company>()
                 .HasMany(c => c.Departments)
                 .WithOne(d => d.Company)
@@ -32,7 +49,7 @@ namespace Worklyn_backend.Domain.Data
             modelBuilder.Entity<Company>()
                 .HasMany(c => c.Payrolls)
                 .WithOne(p => p.Company)
-                .HasForeignKey(p => p.CompanyID)
+                .HasForeignKey(p => p.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Company>()
@@ -59,7 +76,28 @@ namespace Worklyn_backend.Domain.Data
                 .HasForeignKey(a => a.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // ---------- Department Relationships ----------
+            modelBuilder.Entity<Company>()
+                .HasMany(c => c.LeaveTypes)
+                .WithOne(lt => lt.Company)
+                .HasForeignKey(lt => lt.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Company>()
+                .HasMany(c => c.Users)
+                .WithOne(u => u.Company)
+                .HasForeignKey(u => u.CompanyId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Company>()
+                .HasMany(c => c.LeaveRequests)
+                .WithOne(lr => lr.Company)
+                .HasForeignKey(lr => lr.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ---------- Department ----------
+            modelBuilder.Entity<Department>()
+                .HasKey(d => d.DepartmentID);
+
             modelBuilder.Entity<Department>()
                 .HasMany(d => d.Employees)
                 .WithOne(e => e.Department)
@@ -69,10 +107,13 @@ namespace Worklyn_backend.Domain.Data
             modelBuilder.Entity<Department>()
                 .HasOne(d => d.Manager)
                 .WithMany()
-                .HasForeignKey(d => d.ManagerID)
+                .HasForeignKey(d => d.ManagerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // ---------- Employee Relationships ----------
+            // ---------- Employee ----------
+            modelBuilder.Entity<Employee>()
+                .HasKey(e => e.EmployeeId);
+
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Manager)
                 .WithMany()
@@ -87,7 +128,7 @@ namespace Worklyn_backend.Domain.Data
             modelBuilder.Entity<Employee>()
                 .HasMany(e => e.Payrolls)
                 .WithOne(p => p.Employee)
-                .HasForeignKey(p => p.EmployeeID)
+                .HasForeignKey(p => p.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Employee>()
@@ -108,14 +149,46 @@ namespace Worklyn_backend.Domain.Data
                 .HasForeignKey(s => s.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // ---------- LeaveType ----------
-            modelBuilder.Entity<LeaveType>()
-                .HasOne(lt => lt.Company)
-                .WithMany(c => c.LeaveTypes)
-                .HasForeignKey(lt => lt.CompanyId)
+            modelBuilder.Entity<Employee>()
+                .HasMany(e => e.CourseEnrollments)
+                .WithOne(ece => ece.Employee)
+                .HasForeignKey(ece => ece.EmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // ---------- Employee Profile ----------
+            modelBuilder.Entity<EmployeeProfile>()
+                .HasKey(ep => ep.EmployeeProfileId);
+
+            modelBuilder.Entity<EmployeeProfile>()
+                .HasOne(ep => ep.Employee)
+                .WithOne(e => e.Profile)
+                .HasForeignKey<EmployeeProfile>(ep => ep.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ---------- LeaveType ----------
+            modelBuilder.Entity<LeaveType>()
+                .HasKey(lt => lt.LeaveTypeId);
+
+            // ---------- LeaveRequest ----------
+            modelBuilder.Entity<LeaveRequest>()
+                .HasKey(lr => lr.LeaveRequestId);
+
+            modelBuilder.Entity<LeaveRequest>()
+                .HasOne(lr => lr.LeaveType)
+                .WithMany()
+                .HasForeignKey(lr => lr.LeaveTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LeaveRequest>()
+                .HasOne(lr => lr.Approver)
+                .WithMany()
+                .HasForeignKey(lr => lr.ApproverId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // ---------- Subscription ----------
+            modelBuilder.Entity<Subscription>()
+                .HasKey(s => s.SubscriptionId);
+
             modelBuilder.Entity<Subscription>()
                 .HasOne(s => s.PaymentMethod)
                 .WithMany()
@@ -124,17 +197,21 @@ namespace Worklyn_backend.Domain.Data
 
             // ---------- Asset ----------
             modelBuilder.Entity<Asset>()
+                .HasKey(a => a.AssetId);
+
+            modelBuilder.Entity<Asset>()
                 .HasOne(a => a.Category)
                 .WithMany()
                 .HasForeignKey(a => a.AssetCategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // ---------- AssetCategory ----------
+            modelBuilder.Entity<AssetCategory>()
+                .HasKey(ac => ac.AssetCategoryId);
+
             // ---------- EmployeeCourseEnrollment ----------
             modelBuilder.Entity<EmployeeCourseEnrollment>()
-                .HasOne(ece => ece.Employee)
-                .WithMany()
-                .HasForeignKey(ece => ece.EmployeeId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasKey(ece => ece.EnrollmentId);
 
             modelBuilder.Entity<EmployeeCourseEnrollment>()
                 .HasOne(ece => ece.TrainingCourse)
@@ -142,19 +219,48 @@ namespace Worklyn_backend.Domain.Data
                 .HasForeignKey(ece => ece.TrainingCourseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // ---------- TrainingCourse ----------
+            modelBuilder.Entity<TrainingCourse>()
+                .HasKey(tc => tc.TrainingCourseId);
+
+            // ---------- Position ----------
+            modelBuilder.Entity<Position>()
+                .HasKey(p => p.PositionId);
+
+            // ---------- RecruitmentCandidate ----------
+            modelBuilder.Entity<RecruitmentCandidate>()
+                .HasKey(rc => rc.CandidateId);
+
+            // ---------- Shift ----------
+            modelBuilder.Entity<Shift>()
+                .HasKey(s => s.ShiftId);
+
+            // ---------- Attendance ----------
+            modelBuilder.Entity<Attendance>()
+                .HasKey(a => a.AttendanceId);
+
+            // ---------- Payroll ----------
+            modelBuilder.Entity<Payroll>()
+                .HasKey(p => p.PayrollId);
+
+            // ---------- PerformanceReview ----------
+            modelBuilder.Entity<PerformanceReview>()
+                .HasKey(pr => pr.ReviewId);
+
             // ---------- User ----------
             modelBuilder.Entity<User>()
-                .HasOne(u => u.Company)
-                .WithMany(c => c.Users)
-                .HasForeignKey(u => u.CompanyId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasKey(u => u.UserId);
 
             // ---------- RefreshToken ----------
             modelBuilder.Entity<RefreshToken>()
+                .HasKey(rt => rt.Id);
+
+            modelBuilder.Entity<RefreshToken>()
                 .HasOne(rt => rt.User)
-                .WithMany()
+                .WithMany(u => u.RefreshTokens)
                 .HasForeignKey(rt => rt.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
+
