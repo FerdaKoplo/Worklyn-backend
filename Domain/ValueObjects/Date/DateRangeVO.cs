@@ -2,9 +2,9 @@
 {
     public class DateRangeVO
     {
-        public DateTime Start { get; }
-        public DateTime End { get; }
-
+        public DateTime Start { get; private set; }
+        public DateTime End { get; private set; }
+        private DateRangeVO() { }
         public DateRangeVO(DateTime start, DateTime end)
         {
             if (end < start) throw new ArgumentException("End date cannot be before start date");

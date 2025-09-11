@@ -2,8 +2,9 @@
 {
     public class MoneyVO
     {
-        public decimal Amount { get; }
+        public decimal Amount { get; private set; }
 
+        private MoneyVO() { }
         public MoneyVO(decimal amount)
         {
             if (amount < 0) throw new ArgumentException("Amount cannot be negative");

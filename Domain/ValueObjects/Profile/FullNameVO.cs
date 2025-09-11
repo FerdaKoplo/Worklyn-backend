@@ -2,9 +2,10 @@
 {
     public class FullNameVO
     {
-        public string FirstName { get; }
-        public string LastName { get; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
 
+        private FullNameVO() { }
         public FullNameVO(string firstName, string lastName)
         {
             if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentException("First name required");

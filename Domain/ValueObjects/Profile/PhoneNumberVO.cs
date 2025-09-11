@@ -2,8 +2,8 @@
 {
     public class PhoneNumberVO
     {
-        public string Value { get; }
-
+        public string Value { get; private set; }
+        private PhoneNumberVO() { }
         public PhoneNumberVO(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

@@ -3,9 +3,9 @@
 {
     public class EmergencyContactVO
     {
-        public string Name { get; }
-        public PhoneNumberVO Phone { get; }
-        public string Relation { get; }
+        public string Name { get; private set; }
+        public PhoneNumberVO Phone { get; private set; }
+        public string Relation { get; private set; }
         private EmergencyContactVO() { } 
 
         public EmergencyContactVO(string name, PhoneNumberVO phone, string relation)

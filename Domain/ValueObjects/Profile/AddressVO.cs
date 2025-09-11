@@ -2,11 +2,13 @@
 {
     public class AddressVO
     {
-        public string Street { get; }
-        public string City { get; }
-        public string Province { get; }
-        public string PostalCode { get; }
-        public string Country { get; }
+        public string Street { get; private set; }
+        public string City { get; private set; }
+        public string Province { get; private set; }
+        public string PostalCode { get; private set; }
+        public string Country { get; private set; }
+
+        private AddressVO() { }
 
         public AddressVO(string street, string city, string province, string postalCode, string country)
         {
