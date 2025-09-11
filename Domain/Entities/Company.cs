@@ -14,6 +14,8 @@ namespace Worklyn_backend.Domain.Entities
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
+       
+
         // Address
         public string Address { get; set; }
         public string City { get; set; }
@@ -31,5 +33,10 @@ namespace Worklyn_backend.Domain.Entities
         public ICollection<Department> Departments { get; set; } = new List<Department>();
         public ICollection<Employee> Employees { get; set; } = new List<Employee>();
         public ICollection<Payroll> Payrolls { get; set; } = new List<Payroll>();
+        public ICollection<PaymentMethod> PaymentMethods { get; set; } = new List<PaymentMethod>();
+        public ICollection<TrainingCourse> TrainingCourses { get; set; } = new List<TrainingCourse>();
+        public ICollection<Asset> Assets { get; set; } = new List<Asset>();
+        public ICollection<LeaveType> LeaveTypes { get; set; } = new List<LeaveType>();
+        public ICollection<User> Users { get; set; } = new List<User>();
     }
 }

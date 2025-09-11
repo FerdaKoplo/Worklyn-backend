@@ -10,6 +10,9 @@ namespace Worklyn_backend.Domain.Entities
         public int? ManagerID { get; set; }
         public Employee Manager { get; set; }
 
+        public Guid CompanyId { get; set; } 
+        public Company Company { get; set; }
+
 
         public ICollection<Employee> Employees { get; set; } = new List<Employee>();
         public DepartmentStatus Status { get; set; } = DepartmentStatus.Active;

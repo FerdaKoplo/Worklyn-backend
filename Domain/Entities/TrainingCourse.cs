@@ -10,5 +10,6 @@
         public string Description { get; set; }
         public int DurationHours { get; set; }
         public string Instructor { get; set; }
+        public ICollection<EmployeeCourseEnrollment> Enrollments { get; set; } = new List<EmployeeCourseEnrollment>();
     }
 }
