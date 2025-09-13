@@ -63,7 +63,8 @@ namespace Worklyn_backend.Application.Services.Auth
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken(user);
 
-            user.RefreshTokens.Add(refreshToken);
+
+            _dbContext.RefreshTokens.Add(refreshToken);
             await _dbContext.SaveChangesAsync();
 
             return new AuthResponseDTO

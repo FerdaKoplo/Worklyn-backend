@@ -43,6 +43,7 @@
     <Folder Include="Api\DTOs\Payroll\" />
     <Folder Include="Api\DTOs\PaymentMethod\" />
     <Folder Include="Api\DTOs\RecruitmentCandidate\" />
+    <Folder Include="Application\Services\NewFolder\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
 

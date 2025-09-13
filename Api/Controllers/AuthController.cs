@@ -32,8 +32,15 @@ namespace Worklyn_backend.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
-            var result = await _authService.LoginAsync(model);
-            return Ok(result);
+            try
+            {
+                var result = await _authService.LoginAsync(model);
+                return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }
