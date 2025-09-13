@@ -335,14 +335,7 @@ namespace Worklyn_backend.Domain.Data
                 .HasKey(u => u.UserId);
 
             // ---------- RefreshToken ----------
-            modelBuilder.Entity<RefreshToken>()
-                .HasKey(rt => rt.Id);
-
-            modelBuilder.Entity<RefreshToken>()
-                .HasOne(rt => rt.User)
-                .WithMany(u => u.RefreshTokens)
-                .HasForeignKey(rt => rt.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+          
 
             modelBuilder.Entity<RefreshToken>(rt =>
             {

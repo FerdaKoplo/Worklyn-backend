@@ -1,8 +1,12 @@
 using Casbin;
 using Casbin.Persist.Adapter.EFCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Worklyn_backend.Application.Interfaces;
+using Worklyn_backend.Application.Services.Auth;
 using Worklyn_backend.Domain.Data;
+using Worklyn_backend.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,16 +34,25 @@ builder.Services.AddScoped<Enforcer>(sp =>
     return enforcer;
 });
 
-builder.Services.AddControllers();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
+builder.Services.AddScoped<AuthService>();
 
-builder.Services.AddOpenApi();
+// Password hasher (generic version)
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+// --- Controllers & Swagger ---
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Casbin.NET" Version="2.13.0" />
     <PackageReference Include="Casbin.NET.Adapter.EFCore" Version="2.7.0" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
@@ -33,6 +34,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Api\DTOs\Employee\" />
+    <Folder Include="Api\DTOs\EmployeeProfile\" />
+    <Folder Include="Api\DTOs\LeaveRequest\" />
+    <Folder Include="Api\DTOs\LeaveType\" />
+    <Folder Include="Api\DTOs\TrainingCourse\" />
+    <Folder Include="Api\DTOs\RefreshToken\" />
+    <Folder Include="Api\DTOs\Payroll\" />
+    <Folder Include="Api\DTOs\PaymentMethod\" />
+    <Folder Include="Api\DTOs\RecruitmentCandidate\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
 
