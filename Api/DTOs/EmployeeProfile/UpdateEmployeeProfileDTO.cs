@@ -1,6 +1,6 @@
 ﻿namespace Worklyn_backend.Api.DTOs.EmployeeProfile
 {
-    public class UpdateEmployeeDTO
+    public class UpdateEmployeeProfileDTO
     {
         public string FullName { get; set; }
         public DateTime DateOfBirth { get; set; }

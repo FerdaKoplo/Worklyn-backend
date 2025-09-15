@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -6,6 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Worklyn_backend</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Content Remove="Controllers\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <None Remove="Controllers\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.1" />
@@ -34,17 +41,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\DTOs\Employee\" />
-    <Folder Include="Api\DTOs\EmployeeProfile\" />
     <Folder Include="Api\DTOs\LeaveRequest\" />
     <Folder Include="Api\DTOs\LeaveType\" />
+    <Folder Include="Api\DTOs\AssetCategory\" />
+    <Folder Include="Api\DTOs\Asset\" />
+    <Folder Include="Api\DTOs\EmployeeCourseEnrollment\" />
+    <Folder Include="Api\DTOs\Shift\" />
+    <Folder Include="Api\DTOs\Position\" />
+    <Folder Include="Api\DTOs\PerformanceReview\" />
+    <Folder Include="Api\DTOs\Subscription\" />
     <Folder Include="Api\DTOs\TrainingCourse\" />
     <Folder Include="Api\DTOs\RefreshToken\" />
     <Folder Include="Api\DTOs\Payroll\" />
     <Folder Include="Api\DTOs\PaymentMethod\" />
     <Folder Include="Api\DTOs\RecruitmentCandidate\" />
-    <Folder Include="Application\Services\NewFolder\" />
-    <Folder Include="Controllers\" />
+    <Folder Include="Application\Services\LeaveService\" />
+    <Folder Include="Application\Services\AssetService\" />
+    <Folder Include="Application\Services\TrainingService\" />
   </ItemGroup>
 
 </Project>

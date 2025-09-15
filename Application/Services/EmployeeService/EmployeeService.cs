@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Casbin.Persist;
 using Microsoft.EntityFrameworkCore;
 using Worklyn_backend.Api.DTOs.Employee;
+using Worklyn_backend.Api.DTOs.EmployeeProfile;
 using Worklyn_backend.Application.Interfaces;
+using Worklyn_backend.Application.Specifications;
 using Worklyn_backend.Domain.Data;
 using Worklyn_backend.Domain.Entities;
+using Worklyn_backend.Shared.Wrappers;
 
 namespace Worklyn_backend.Application.Services.EmployeeService
 {
@@ -19,33 +23,9 @@ namespace Worklyn_backend.Application.Services.EmployeeService
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<EmployeeDTO>> GetAllEmployeesAsync(EmployeeSearchFilterDTO filter = null)
+        public async Task<IEnumerable<EmployeeDTO>> GetAllEmployeesAsync()
         {
-            var query = _dbContext.Employees
-                .Include(e => e.Profile) 
-                .AsQueryable();
-
-            if (filter != null)
-            {
-                if (!string.IsNullOrWhiteSpace(filter.Name))
-                {
-                    query = query.Where(e =>
-                        e.Profile.Name.FirstName.Contains(filter.Name) ||
-                        e.Profile.Name.LastName.Contains(filter.Name)
-                    );
-                }
-
-                if (filter.DepartmentId.HasValue)
-                    query = query.Where(e => e.DepartmentId == filter.DepartmentId.Value);
-
-                if (filter.PositionId.HasValue)
-                    query = query.Where(e => e.PositionId == filter.PositionId.Value);
-
-                if (!string.IsNullOrWhiteSpace(filter.Status))
-                    query = query.Where(e => e.Status.ToString() == filter.Status);
-            }
-
-            var employees = await query.ToListAsync();
+            var employees = await _dbContext.Employees.ToListAsync();
             return _mapper.Map<IEnumerable<EmployeeDTO>>(employees);
         }
 
@@ -85,6 +65,26 @@ namespace Worklyn_backend.Application.Services.EmployeeService
 
             _dbContext.Employees.Remove(employee);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<EmployeeDTO>> SearchEmployeeAsync(EmployeeFilterDTO filter)
+        {
+            var query = _dbContext.Employees
+                      .Include(e => e.Profile)
+                      .AsQueryable();
+
+            query = EmployeeSpecification.ApplyFilter(query, filter);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ProjectTo<EmployeeDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new PagedResult<EmployeeDTO>(items, totalCount, filter.PageNumber, filter.PageSize);
+
         }
     }
 }

@@ -4,10 +4,10 @@ namespace Worklyn_backend.Application.Interfaces
 {
     public interface ICompanyService
     {
-        Task<IEnumerable<CompanyDTO>> GetAllAsync();
-        Task<CompanyDTO> GetByIdAsync(Guid companyId);
-        Task<CompanyDTO> CreateAsync(CreateCompanyDTO dto);
-        Task<CompanyDTO> UpdateAsync(Guid companyId, UpdateCompanyDTO dto);
-        Task DeleteAsync(Guid companyId);
+        Task<IEnumerable<CompanyDTO>> GetAllCompaniesAsync();
+        Task<CompanyDTO> GetCompanyByIdAsync(Guid companyId);
+        Task<CompanyDTO> CreateCompanyAsync(CreateCompanyDTO dto);
+        Task<CompanyDTO> UpdateCompanyAsync(Guid companyId, UpdateCompanyDTO dto);
+        Task DeleteCompanyAsync(Guid companyId);
     }
 }

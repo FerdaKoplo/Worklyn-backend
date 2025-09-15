@@ -1,6 +1,6 @@
 ﻿namespace Worklyn_backend.Api.DTOs.EmployeeProfile
 {
-    public class CreateEmployeeDTO
+    public class CreateEmployeeProfileDTO
     {
         public Guid EmployeeId { get; set; }
         public string FullName { get; set; }

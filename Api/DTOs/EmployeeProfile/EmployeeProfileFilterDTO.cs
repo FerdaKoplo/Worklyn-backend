@@ -12,5 +12,8 @@
         public string? Province { get; set; }
         public string? BloodType { get; set; }
         public string? Religion { get; set; }
+
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
     }
 }

@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Casbin.Persist;
 using Microsoft.EntityFrameworkCore;
+using Worklyn_backend.Api.DTOs.Company;
 using Worklyn_backend.Api.DTOs.EmployeeProfile;
 using Worklyn_backend.Application.Interfaces;
+using Worklyn_backend.Application.Specifications;
 using Worklyn_backend.Domain.Data;
 using Worklyn_backend.Domain.Entities;
+using Worklyn_backend.Shared.Wrappers;
 
 namespace Worklyn_backend.Application.Services.EmployeeService
 {
@@ -19,55 +23,10 @@ namespace Worklyn_backend.Application.Services.EmployeeService
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<EmployeeProfileDTO>> GetAllProfileAsync(EmployeeProfileFilterDTO filter = null)
+        public async Task<IEnumerable<EmployeeProfileDTO>> GetAllProfileAsync()
         {
-            var query = _dbContext.EmployeeProfiles
-                         .Include(p => p.Employee)
-                         .AsQueryable();
-
-            if (filter != null)
-            {
-                if (!string.IsNullOrWhiteSpace(filter.FullName))
-                {
-                    query = query.Where(p =>
-                        p.Name.FirstName.Contains(filter.FullName) ||
-                        p.Name.LastName.Contains(filter.FullName)
-                    );
-                }
-
-                if (!string.IsNullOrWhiteSpace(filter.PhoneNumber))
-                    query = query.Where(p => p.PhoneNumber.Value == filter.PhoneNumber);
-
-
-                if (!string.IsNullOrWhiteSpace(filter.Email))
-                    query = query.Where(p => p.Email.Value == filter.Email);
-
-                if (!string.IsNullOrWhiteSpace(filter.Gender))
-                    query = query.Where(p => p.Gender.ToString() == filter.Gender);
-
-                if (!string.IsNullOrWhiteSpace(filter.Religion))
-                    query = query.Where(p => p.Religion != null && p.Religion.ToString() == filter.Religion);
-
-                if (!string.IsNullOrWhiteSpace(filter.Province))
-                    query = query.Where(p => p.Address.Province == filter.Province);
-
-                if (!string.IsNullOrWhiteSpace(filter.City))
-                    query = query.Where(p => p.Address.City == filter.City);
-
-                if (!string.IsNullOrWhiteSpace(filter.BloodType))
-                    query = query.Where(p => p.BloodType.ToString()== filter.BloodType);
-
-                if (!string.IsNullOrWhiteSpace(filter.MaritalStatus))
-                    query = query.Where(p => p.MaritalStatus.ToString() == filter.MaritalStatus);
-
-                if (!string.IsNullOrWhiteSpace(filter.Nationality))
-                    query = query.Where(p => p.Nationality.ToString() == filter.Nationality);
-
-            }
-
-            var profiles = await query.ToListAsync();
-            return _mapper.Map<IEnumerable<EmployeeProfileDTO>>(profiles);
-
+            var employeeProfiles = await _dbContext.EmployeeProfiles.ToListAsync();
+            return _mapper.Map<IEnumerable<EmployeeProfileDTO>>(employeeProfiles);
         }
 
         public async Task<EmployeeProfileDTO> GetProfileByIdAsync(int id)
@@ -124,42 +83,25 @@ namespace Worklyn_backend.Application.Services.EmployeeService
             await _dbContext.SaveChangesAsync();
         }
 
-        //public async Task<IEnumerable<EmployeeProfileDTO>> SearchProfilesAsync(EmployeeProfileFilterDTO filter)
-        //{
-        //    var query = _dbContext.EmployeeProfiles.AsQueryable();
+        public async Task<PagedResult<EmployeeProfileDTO>> SearchProfilesAsync(EmployeeProfileFilterDTO filter)
+        {
+            var query = _dbContext.EmployeeProfiles
+                         .Include(p => p.Employee)
+                         .AsQueryable();
 
-        //    if (!string.IsNullOrWhiteSpace(filter.FullName))
-        //        query = query.Where(p => (p.Name.FirstName + " " + p.Name.LastName).Contains(filter.FullName));
+            query = EmployeeProfileSpecifitaion.ApplyFilter(query, filter);
+            var totalCount = await query.CountAsync();
+            var items = await query
+                        .Skip((filter.PageNumber - 1) * filter.PageSize)
+                        .Take(filter.PageSize)
+                        .ProjectTo<EmployeeProfileDTO>(_mapper.ConfigurationProvider)
+                        .ToListAsync();
 
-        //    if (!string.IsNullOrWhiteSpace(filter.Gender))
-        //        query = query.Where(p => p.Gender.ToString() == filter.Gender);
+            var dtoItems = _mapper.Map<IEnumerable<EmployeeProfileDTO>>(items);
 
-        //    if (!string.IsNullOrWhiteSpace(filter.MaritalStatus))
-        //        query = query.Where(p => p.MaritalStatus.ToString() == filter.MaritalStatus);
+            return new PagedResult<EmployeeProfileDTO>(dtoItems, totalCount, filter.PageNumber, filter.PageSize);
 
-        //    if (!string.IsNullOrWhiteSpace(filter.Nationality))
-        //        query = query.Where(p => p.Nationality.Contains(filter.Nationality));
+        }
 
-        //    if (!string.IsNullOrWhiteSpace(filter.Email))
-        //        query = query.Where(p => p.Email.Value.Contains(filter.Email));
-
-        //    if (!string.IsNullOrWhiteSpace(filter.PhoneNumber))
-        //        query = query.Where(p => p.PhoneNumber.Value.Contains(filter.PhoneNumber));
-
-        //    if (!string.IsNullOrWhiteSpace(filter.City))
-        //        query = query.Where(p => p.Address.City.Contains(filter.City));
-
-        //    if (!string.IsNullOrWhiteSpace(filter.Province))
-        //        query = query.Where(p => p.Address.Province.Contains(filter.Province));
-
-        //    if (!string.IsNullOrWhiteSpace(filter.BloodType))
-        //        query = query.Where(p => p.BloodType.ToString() == filter.BloodType);
-
-        //    if (!string.IsNullOrWhiteSpace(filter.Religion))
-        //        query = query.Where(p => p.Religion.ToString() == filter.Religion);
-
-        //    var profiles = await query.ToListAsync();
-        //    return _mapper.Map<IEnumerable<EmployeeProfileDTO>>(profiles);
-        //}
     }
 }
