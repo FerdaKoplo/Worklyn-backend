@@ -9,7 +9,7 @@ namespace Worklyn_backend.Application.Services.CompanyService
 {
     public class CompanyService : ICompanyService
     {
-        private AppDbContext _dbContext;
+        private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
 
         public CompanyService(AppDbContext dbContext, IMapper mapper)
@@ -56,7 +56,6 @@ namespace Worklyn_backend.Application.Services.CompanyService
             return _mapper.Map<CompanyDTO>(dto);
         
         }
-
 
         public async Task DeleteCompanyAsync(Guid companyId)
         {
